@@ -1,0 +1,18 @@
+name: Decode calculator icons
+on:
+  push:
+    paths: ['car-calculator/icons/*.b64']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  decode:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          for f in car-calculator/icons/*.b64; do base64 -d "$f" > "${f%.b64}"; git rm -q "$f"; done
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add car-calculator/icons
+          git commit -m "Decode calculator icons" && git push
